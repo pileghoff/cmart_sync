@@ -8,9 +8,8 @@
 void cmart_mutex_init(cmart_mutex_t *cmart_mutex, void *inner, size_t inner_size)
 {
     pthread_mutex_init(&cmart_mutex->mutex, NULL);
-    cmart_mutex->inner = malloc(inner_size + sizeof(cmart_mutex));
-    memcpy(cmart_mutex->inner, &cmart_mutex, sizeof(cmart_mutex_t *));
-    memcpy(cmart_mutex->inner + sizeof(cmart_mutex_t *), inner, inner_size);
+    cmart_mutex->inner = malloc(inner_size);
+    memcpy(cmart_mutex->inner, inner, inner_size);
 }
 
 void *cmart_mutex_lock(cmart_mutex_t *cmart_mutex)
@@ -23,9 +22,7 @@ void *cmart_mutex_lock(cmart_mutex_t *cmart_mutex)
     return cmart_mutex->inner + sizeof(cmart_mutex_t *);
 }
 
-void cmart_mutex_unlock(void **inner)
+void cmart_mutex_unlock(cmart_mutex_t **cmart_mutex)
 {
-    cmart_mutex_t *cmart_mutex;
-    memcpy(&cmart_mutex, *inner - sizeof(cmart_mutex_t *), sizeof(cmart_mutex_t *));
-    pthread_mutex_unlock(&cmart_mutex->mutex);
+    pthread_mutex_unlock(&(*cmart_mutex)->mutex);
 }

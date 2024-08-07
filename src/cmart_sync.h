@@ -17,15 +17,15 @@ void cmart_mutex_init(cmart_mutex_t *cmart_mutex, void *inner, size_t inner_size
 
 void *cmart_mutex_lock(cmart_mutex_t *cmart_mutex);
 
-void cmart_mutex_unlock(void **inner);
+void cmart_mutex_unlock(cmart_mutex_t **cmart_mutex);
 
 #define CMART_MUTEX_CREATE(type, name) \
     cmart_mutex_t name##_mutex;        \
     typedef type name##_inner_t
 
-#define CMART_MUTEX_TAKE(name)                                                                                              \
-    __attribute__((cleanup(cmart_mutex_unlock))) void *name##_to_clean = (name##_inner_t *)cmart_mutex_lock(&name##_mutex); \
-    name##_inner_t *name = (name##_inner_t *)name##_to_clean
+#define CMART_MUTEX_TAKE(name)                                                \
+    name##_inner_t *name = (name##_inner_t *)cmart_mutex_lock(&name##_mutex); \
+    __attribute__((cleanup(cmart_mutex_unlock))) cmart_mutex_t *name##_to_cleanup = &name##_mutex
 
 #define CMART_MUTEX_INIT(name, initial)                                                      \
     {                                                                                        \
