@@ -6,15 +6,15 @@ CMART_MUTEX_CREATE(int, test_mutex);
 
 void a()
 {
-    CMART_MUTEX_TAKE(test_mutex);
-    *test_mutex += 1;
-    printf("Set %d\n", *test_mutex);
+    int *m = CMART_MUTEX_TAKE(test_mutex);
+    *m += 1;
+    printf("Set %d\n", *m);
 }
 
 void b()
 {
-    CMART_MUTEX_TAKE(test_mutex);
-    printf("Take %d\n", *test_mutex);
+    int *m = CMART_MUTEX_TAKE(test_mutex);
+    printf("Take %d\n", *m);
 }
 
 void main()
