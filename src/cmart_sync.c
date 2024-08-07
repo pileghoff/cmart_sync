@@ -19,7 +19,7 @@ void *cmart_mutex_lock(cmart_mutex_t *cmart_mutex)
         return NULL;
     }
 
-    return cmart_mutex->inner + sizeof(cmart_mutex_t *);
+    return cmart_mutex->inner;
 }
 
 void cmart_mutex_unlock(cmart_mutex_t **cmart_mutex)
